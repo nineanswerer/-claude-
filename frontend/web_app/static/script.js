@@ -129,55 +129,71 @@ function showError(containerId, message) {
 
 function displayResults(containerId, result) {
     const container = document.getElementById(containerId);
-    container.innerHTML = '';
+    console.log('[displayResults] container element:', container);
+    container.innerHTML = '<p class="info">正在处理结果...</p>';
 
-    if (!result.success) {
-        container.innerHTML = `<p class="error">错误: ${result.error}</p>`;
-        return;
-    }
+    console.log('[displayResults] result:', result);
+    console.log('[displayResults] containerId:', containerId);
 
-    const data = result.data;
+    // 给一个小延迟让用户看到加载状态
+    setTimeout(() => {
+        container.innerHTML = '';
 
-    if (Array.isArray(data) && data.length > 0) {
-        data.forEach(item => {
-            if (typeof item === 'object') {
-                const div = document.createElement('div');
-                div.className = 'result-item';
-                let content = '';
-                for (const [key, value] of Object.entries(item)) {
-                    if (value) {
-                        content += `<p><strong>${key}:</strong> ${value}</p>`;
-                    }
-                }
-                div.innerHTML = content;
-                container.appendChild(div);
-            } else {
-                const p = document.createElement('p');
-                p.textContent = item;
-                container.appendChild(p);
-            }
-        });
-    } else if (typeof data === 'object') {
-        const div = document.createElement('div');
-        div.className = 'result-item';
-        let content = '';
-        for (const [key, value] of Object.entries(data)) {
-            content += `<p><strong>${key}:</strong> ${value}</p>`;
+        if (!result.success) {
+            console.log('[displayResults] result.error:', result.error);
+            container.innerHTML = `<p class="error">错误: ${result.error}</p>`;
+            return;
         }
-        div.innerHTML = content;
-        container.appendChild(div);
-    } else if (typeof data === 'string') {
-        const p = document.createElement('p');
-        p.textContent = data;
-        container.appendChild(p);
-    } else {
-        container.innerHTML = '<p class="info">没有结果</p>';
-    }
 
-    if (result.filepath) {
-        const p = document.createElement('p');
-        p.className = 'success';
-        p.textContent = `已导出到: ${result.filepath}`;
-        container.appendChild(p);
-    }
+        const data = result.data;
+        console.log('[displayResults] data:', data, 'type:', typeof data);
+
+        if (Array.isArray(data)) {
+            if (data.length === 0) {
+                container.innerHTML = '<p class="info">没有找到结果</p>';
+            } else {
+                data.forEach(item => {
+                    if (typeof item === 'object' && item !== null) {
+                        const div = document.createElement('div');
+                        div.className = 'result-item';
+                        let content = '';
+                        for (const [key, value] of Object.entries(item)) {
+                            // 显示所有字段，包括空值
+                            const displayValue = (value === null || value === undefined) ? 'N/A' : value;
+                            content += `<p><strong>${key}:</strong> ${displayValue}</p>`;
+                        }
+                        div.innerHTML = content || '<p class="info">(无数据)</p>';
+                        container.appendChild(div);
+                    } else {
+                        const p = document.createElement('p');
+                        p.textContent = item;
+                        container.appendChild(p);
+                    }
+                });
+            }
+        } else if (typeof data === 'object' && data !== null) {
+            const div = document.createElement('div');
+            div.className = 'result-item';
+            let content = '';
+            for (const [key, value] of Object.entries(data)) {
+                const displayValue = (value === null || value === undefined) ? 'N/A' : value;
+                content += `<p><strong>${key}:</strong> ${displayValue}</p>`;
+            }
+            div.innerHTML = content || '<p class="info">(无数据)</p>';
+            container.appendChild(div);
+        } else if (typeof data === 'string') {
+            const p = document.createElement('p');
+            p.textContent = data;
+            container.appendChild(p);
+        } else {
+            container.innerHTML = '<p class="info">没有结果</p>';
+        }
+
+        if (result.filepath) {
+            const p = document.createElement('p');
+            p.className = 'success';
+            p.textContent = `已导出到: ${result.filepath}`;
+            container.appendChild(p);
+        }
+    }, 100); // 100ms延迟后显示结果
 }

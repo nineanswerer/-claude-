@@ -1,6 +1,11 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
 import yaml
 import os
+import sys
+
+# 添加项目根目录到Python路径，以便导入core和plugins模块
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 from core.engine import SpiderEngine
 from plugins import PluginManager, load_plugins_from_config
 
@@ -75,6 +80,9 @@ def search():
             merged_config,
             keyword
         )
+        # 调试日志：输出结果结构和类型
+        print(f"[DEBUG] Search API result: {result}")
+        print(f"[DEBUG] Result type: {type(result)}")
         return jsonify({'success': True, 'data': result})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
@@ -117,6 +125,9 @@ def crawl():
             url=url,
             selectors=selectors
         )
+        # 调试日志
+        print(f"[DEBUG] Crawl API result: {result}")
+        print(f"[DEBUG] Result type: {type(result)}")
         return jsonify({'success': True, 'data': result})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
