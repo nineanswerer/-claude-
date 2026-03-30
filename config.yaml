@@ -1,0 +1,55 @@
+# 爬虫框架配置文件示例
+# 使用YAML格式定义插件、爬取任务和输出设置
+
+# 全局配置
+global:
+  use_proxy: false
+  # proxy_list:
+  #   - http://proxy1:port
+  #   - http://proxy2:port
+  delay_range: [1.0, 3.0]  # 请求间隔随机范围（秒）
+  timeout: 15
+
+# 插件列表（按顺序执行）
+plugins:
+  - name: KeywordSearchPlugin
+    config:
+      search_engine: google
+      max_results: 10
+      output_format: list
+      user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+
+  - name: GenericCrawlerPlugin
+    config:
+      selectors:
+        title: "h1"
+        content: "div.content"
+        author: "span.author"
+        date: "time.published"
+
+  - name: ExporterPlugin
+    config:
+      output_dir: "data"
+      file_prefix: "search_result"
+      format: "json"
+      encoding: "utf-8"
+
+  - name: LoggingPlugin
+    config:
+      log_file: "logs/crawl.log"
+
+# 任务定义（可通过命令行指定运行哪个任务）
+tasks:
+  search_task:
+    plugin: KeywordSearchPlugin
+    params:
+      keyword: "Python爬虫"
+
+  news_crawl:
+    plugin: GenericCrawlerPlugin
+    params:
+      url: "https://news.example.com/latest"
+      selectors:
+        title: "h2.article-title"
+        summary: "div.summary"
+        publish_time: "span.date"

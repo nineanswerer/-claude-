@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网络爬虫平台</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>网络爬虫平台</h1>
+            <p>可配置关键词爬取与数据提取</p>
+        </header>
+
+        <nav>
+            <button id="btn-search" class="nav-btn active">搜索任务</button>
+            <button id="btn-crawl" class="nav-btn">通用爬取</button>
+            <button id="btn-export" class="nav-btn">数据导出</button>
+        </nav>
+
+        <main>
+            <!-- 搜索任务表单 -->
+            <section id="search-section" class="section active">
+                <h2>关键词搜索</h2>
+                <form id="search-form">
+                    <div class="form-group">
+                        <label for="search-keyword">关键词</label>
+                        <input type="text" id="search-keyword" name="keyword" placeholder="输入要搜索的关键词" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="search-engine">搜索引擎</label>
+                        <select id="search-engine">
+                            <option value="google">Google</option>
+                            <option value="bing">Bing</option>
+                            <option value="duckduckgo">DuckDuckGo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="max-results">最大结果数</label>
+                        <input type="number" id="max-results" name="max_results" value="10" min="1" max="100">
+                    </div>
+                    <button type="submit" class="btn-primary">执行搜索</button>
+                </form>
+                <div id="search-results" class="results"></div>
+            </section>
+
+            <!-- 通用爬取表单 -->
+            <section id="crawl-section" class="section">
+                <h2>通用爬取</h2>
+                <form id="crawl-form">
+                    <div class="form-group">
+                        <label for="crawl-url">目标URL</label>
+                        <input type="url" id="crawl-url" name="url" placeholder="https://example.com/page" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="crawl-selectors">选择器 (JSON格式)</label>
+                        <textarea id="crawl-selectors" name="selectors" rows="5" placeholder='{"title": "h1", "content": "div.content"}' required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">执行爬取</button>
+                </form>
+                <div id="crawl-results" class="results"></div>
+            </section>
+
+            <!-- 数据导出表单 -->
+            <section id="export-section" class="section">
+                <h2>数据导出</h2>
+                <form id="export-form">
+                    <div class="form-group">
+                        <label for="export-data">数据 (JSON格式数组)</label>
+                        <textarea id="export-data" name="data" rows="8" placeholder='[{"title": "示例", "content": "内容"}]' required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="export-filename">文件名（不含扩展）</label>
+                        <input type="text" id="export-filename" name="filename" placeholder="my_data">
+                    </div>
+                    <div class="form-group">
+                        <label for="export-format">导出格式</label>
+                        <select id="export-format">
+                            <option value="json">JSON</option>
+                            <option value="csv">CSV</option>
+                            <option value="txt">TXT</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">导出数据</button>
+                </form>
+                <div id="export-results" class="results"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>基于Flask + Python | &copy; 2025 爬虫平台</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

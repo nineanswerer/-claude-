@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网络爬虫桌面版</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f2f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ecf0f1;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            color: #555;
+        }
+        .tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+        }
+        .tab:hover {
+            background: #f7f9fc;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .status-bar {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .status-running {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-stopped {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status-idle {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>网络爬虫桌面版</h1>
+        <p class="subtitle">可配置爬虫框架 - 离线桌面应用</p>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="search">关键词搜索</div>
+            <div class="tab" data-tab="crawl">通用爬取</div>
+            <div class="tab" data-tab="export">数据导出</div>
+            <div class="tab" data-tab="config">配置</div>
+        </div>
+
+        <!-- 搜索任务 -->
+        <div id="search" class="section active">
+            <h3>关键词搜索</h3>
+            <form id="search-form">
+                <div class="form-group">
+                    <label>关键词</label>
+                    <input type="text" name="keyword" required placeholder="例如：Python爬虫">
+                </div>
+                <div class="form-group">
+                    <label>搜索引擎</label>
+                    <select name="engine">
+                        <option value="google">Google</option>
+                        <option value="bing">Bing</option>
+                        <option value="duckduckgo">DuckDuckGo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>最大结果数</label>
+                    <input type="number" name="max_results" value="10" min="1" max="100">
+                </div>
+                <button type="submit" class="btn btn-primary" id="start-btn">开始搜索</button>
+                <button type="button" class="btn btn-danger" id="stop-btn" disabled>停止</button>
+            </form>
+            <div class="status-bar status-idle" id="status">就绪</div>
+            <div class="output" id="output">等待执行...</div>
+        </div>
+
+        <!-- 通用爬取 -->
+        <div id="crawl" class="section">
+            <h3>通用爬取</h3>
+            <form id="crawl-form">
+                <div class="form-group">
+                    <label>目标URL</label>
+                    <input type="url" name="url" required placeholder="https://example.com/page">
+                </div>
+                <div class="form-group">
+                    <label>选择器 (JSON格式)</label>
+                    <textarea name="selectors" rows="5" required placeholder='{"title": "h1", "content": "div.content"}'></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="crawl-start-btn">开始爬取</button>
+                <button type="button" class="btn btn-danger" id="crawl-stop-btn" disabled>停止</button>
+            </form>
+            <div class="status-bar status-idle" id="crawl-status">就绪</div>
+            <div class="output" id="crawl-output">等待执行...</div>
+        </div>
+
+        <!-- 数据导出 -->
+        <div id="export" class="section">
+            <h3>数据导出</h3>
+            <form id="export-form">
+                <div class="form-group">
+                    <label>数据 (JSON数组)</label>
+                    <textarea name="data" rows="8" required placeholder='[{"title": "标题", "content": "内容"}]'></textarea>
+                </div>
+                <div class="form-group">
+                    <label>文件名</label>
+                    <input type="text" name="filename" placeholder="my_data">
+                </div>
+                <div class="form-group">
+                    <label>格式</label>
+                    <select name="format">
+                        <option value="json">JSON</option>
+                        <option value="csv">CSV</option>
+                        <option value="txt">TXT</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">导出</button>
+            </form>
+            <div class="output" id="export-output">等待操作...</div>
+        </div>
+
+        <!-- 配置 -->
+        <div id="config" class="section">
+            <h3>配置文件</h3>
+            <p>以下配置将保存到 config.yaml</p>
+            <form id="config-form">
+                <div class="form-group">
+                    <label>全局延迟范围 (秒)</label>
+                    <input type="text" name="delay_range" value="[1.0, 3.0]" placeholder="例如: [1, 3]">
+                </div>
+                <div class="form-group">
+                    <label>超时时间 (秒)</label>
+                    <input type="number" name="timeout" value="15">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="use_proxy"> 使用代理
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>代理列表 (每行一个)</label>
+                    <textarea name="proxy_list" rows="4">http://proxy1:port
+http://proxy2:port</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">保存配置</button>
+            </form>
+            <div class="output" id="config-output"></div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
