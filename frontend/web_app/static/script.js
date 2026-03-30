@@ -156,13 +156,57 @@ function displayResults(containerId, result) {
                     if (typeof item === 'object' && item !== null) {
                         const div = document.createElement('div');
                         div.className = 'result-item';
-                        let content = '';
-                        for (const [key, value] of Object.entries(item)) {
-                            // 显示所有字段，包括空值
-                            const displayValue = (value === null || value === undefined) ? 'N/A' : value;
-                            content += `<p><strong>${key}:</strong> ${displayValue}</p>`;
+
+                        // 特殊处理：title和url组合成标题链接
+                        const title = item.title || item.Title;
+                        const url = item.url || item.URL || item.link;
+                        const snippet = item.snippet || item.Snippet || item.description || '';
+
+                        // 1. 标题链接 (如果有title和url)
+                        if (title && url) {
+                            const titleLink = document.createElement('a');
+                            titleLink.className = 'result-title';
+                            titleLink.href = url;
+                            titleLink.textContent = title;
+                            titleLink.target = '_blank';
+                            titleLink.rel = 'noopener noreferrer';
+                            div.appendChild(titleLink);
+                        } else if (title) {
+                            // 只有标题无链接
+                            const titleElem = document.createElement('div');
+                            titleElem.className = 'result-title';
+                            titleElem.textContent = title;
+                            div.appendChild(titleElem);
                         }
-                        div.innerHTML = content || '<p class="info">(无数据)</p>';
+
+                        // 2. URL链接显示
+                        if (url) {
+                            const urlLink = document.createElement('a');
+                            urlLink.className = 'result-url';
+                            urlLink.href = url;
+                            urlLink.textContent = url;
+                            urlLink.target = '_blank';
+                            urlLink.rel = 'noopener noreferrer';
+                            div.appendChild(urlLink);
+                        }
+
+                        // 3. Snippet摘要
+                        if (snippet) {
+                            const snippetElem = document.createElement('p');
+                            snippetElem.className = 'result-snippet';
+                            snippetElem.textContent = snippet;
+                            div.appendChild(snippetElem);
+                        }
+
+                        // 4. 其他字段
+                        for (const [key, value] of Object.entries(item)) {
+                            if (key !== 'title' && key !== 'url' && key !== 'link' && key !== 'snippet' && key !== 'Snippet' && key !== 'description') {
+                                const p = document.createElement('p');
+                                p.innerHTML = `<strong>${key}:</strong> ${value !== null && value !== undefined ? value : 'N/A'}`;
+                                div.appendChild(p);
+                            }
+                        }
+
                         container.appendChild(div);
                     } else {
                         const p = document.createElement('p');

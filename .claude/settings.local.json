@@ -5,7 +5,10 @@
       "Bash(curl -X POST http://localhost:5000/api/search -H \"Content-Type: application/json\" -d \"{\"\"keyword\"\":\"\"Python\"\",\"\"plugin\"\":\"\"KeywordSearchPlugin\"\",\"\"plugin_config\"\":{\"\"search_engine\"\":\"\"bing\"\",\"\"max_results\"\":5}}\")",
       "Bash(curl -s -X POST http://localhost:5000/api/search -H \"Content-Type: application/json\" -d \"{\"\"keyword\"\":\"\"Python\"\",\"\"plugin\"\":\"\"KeywordSearchPlugin\"\",\"\"plugin_config\"\":{\"\"search_engine\"\":\"\"bing\"\",\"\"max_results\"\":5}}\")",
       "Bash(python -m json.tool)",
-      "Bash(curl -s -X POST http://localhost:5000/api/search -H \"Content-Type: application/json\" -d \"{\"\"keyword\"\":\"\"Python\"\",\"\"plugin\"\":\"\"KeywordSearchPlugin\"\",\"\"plugin_config\"\":{\"\"search_engine\"\":\"\"bing\"\",\"\"max_results\"\":3}}\")"
+      "Bash(curl -s -X POST http://localhost:5000/api/search -H \"Content-Type: application/json\" -d \"{\"\"keyword\"\":\"\"Python\"\",\"\"plugin\"\":\"\"KeywordSearchPlugin\"\",\"\"plugin_config\"\":{\"\"search_engine\"\":\"\"bing\"\",\"\"max_results\"\":3}}\")",
+      "Bash(curl -s -X POST http://localhost:5000/api/search -H \"Content-Type: application/json\" -d \"{\"\"keyword\"\":\"\"Python爬虫\"\",\"\"plugin\"\":\"\"KeywordSearchPlugin\"\",\"\"plugin_config\"\":{\"\"search_engine\"\":\"\"google\"\",\"\"max_results\"\":5}}\")",
+      "Bash(curl -s -X POST http://localhost:5000/api/search -H \"Content-Type: application/json\" -d \"{\"\"keyword\"\":\"\"Python\"\",\"\"plugin\"\":\"\"KeywordSearchPlugin\"\",\"\"plugin_config\"\":{\"\"search_engine\"\":\"\"google\"\",\"\"max_results\"\":5}}\")",
+      "Bash(python -c \":*)"
     ]
   }
 }

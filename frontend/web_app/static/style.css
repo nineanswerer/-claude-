@@ -133,20 +133,44 @@ textarea {
 }
 
 .result-title {
-    font-weight: bold;
-    margin-bottom: 5px;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.result-title a {
+    color: #0066cc;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.result-title a:hover {
+    color: #004499;
+    text-decoration: underline;
 }
 
 .result-url {
-    color: #3498db;
-    font-size: 0.9em;
-    margin-bottom: 5px;
+    color: #28a745;
+    font-size: 0.85em;
+    margin-bottom: 8px;
     word-break: break-all;
+    display: block;
+}
+
+.result-url a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.result-url a:hover {
+    text-decoration: underline;
 }
 
 .result-snippet {
-    color: #666;
+    color: #555;
     font-size: 0.95em;
+    line-height: 1.5;
+    margin-top: 5px;
 }
 
 .error {

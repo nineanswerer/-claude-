@@ -179,6 +179,31 @@ class MyPlugin(SpiderPlugin):
 
 ---
 
+#### 搜索引擎支持说明
+
+- ✅ **Bing (推荐)**: 无需API密钥，低频率下可正常工作。**这是我们的推荐选择。**
+- ⚠️ **DuckDuckGo**: 对爬虫友好，可直接使用。
+- ❌ **Google**: **已完全屏蔽**直接爬取。如需使用Google搜索，建议：
+  1. 使用 [Google Custom Search JSON API](https://developers.google.com/custom-search/v1/overview) (需付费)
+  2. 使用代理池+更复杂的浏览器模拟（如Selenium）
+  3. 在桌面应用中集成Puppeteer/Playwright（需Node.js）
+
+### 已知限制
+
+1. **Google搜索**: 由于Google强大的反爬虫机制，直接从服务器获取搜索结果已不可行。框架会返回明确错误提示。
+2. **动态加载网站**: 对于使用JavaScript动态加载内容的网站，需要使用`GenericCrawlerPlugin`配合Selenium或Playwright（需扩展）。
+3. **验证码处理**: 未内置验证码识别功能，如遇到验证码请暂停或更换IP。
+
+### 推荐工作流
+
+1. 使用 **Bing** 作为默认搜索引擎
+2. 对于特定网站，使用 **通用爬取** 配合CSS选择器
+3. 定期导出数据到`data/`目录
+4. 如有大量爬取需求，配置`config.yaml`中的代理设置
+
+
+---
+
 ### 许可证
 
 本项目仅供学习和研究使用，请勿用于非法用途。
